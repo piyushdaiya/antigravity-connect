@@ -51,7 +51,7 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	// Sender Goroutine (Screenshots)
 	go func() {
 		defer conn.Close()
-		ticker := time.NewTicker(200 * time.Millisecond) // 5 FPS
+		ticker := time.NewTicker(1000 * time.Millisecond) // 5 FPS
 		defer ticker.Stop()
 
 		for {
