@@ -116,35 +116,13 @@ func GetScreenshot() ([]byte, error) {
 	}
 
 	var buf []byte
-
-	// =====================================================================
-	// 🎯 SELECTOR CONFIGURATION (Check ui_inspector.js in your repo!)
-	// =====================================================================
-	
-	// OPTION A: Main Editor Area (Default for Agent Workspaces)
-	// Use this if your Agent Manager is open as a main tab in the center.
-	//selector := ".part.editor" 
-
-	// OPTION B: Right-Side Chat Panel (Auxiliary Bar)
-	// Use this if your Agent is in the right-hand sidebar (like Copilot/Chat).
 	selector := ".part.auxiliarybar"
 
-	// OPTION C: Left-Side Explorer Panel
-	// Use this if your Agent is in the left sidebar.
-	// selector := ".part.sidebar"
-	
-	// =====================================================================
-
-	// 1. Try to capture the specific cropped area
-	// 'chromedp.NodeVisible' ensures we wait until it's actually rendered
-	err := chromedp.Run(globalCtx, chromedp.Screenshot(selector, &buf, chromedp.NodeVisible))
-	
-	// 2. Fallback: If the selector isn't found, capture the full screen
-	if err != nil || len(buf) == 0 {
-		// log.Printf("⚠️ Crop failed (Selector '%s' not found). Sending full screen.", selector)
-		if err := chromedp.Run(globalCtx, chromedp.CaptureScreenshot(&buf)); err != nil {
-			return nil, err
-		}
+	// FIX: Remove 'chromedp.NodeVisible'
+	// We just ask for the screenshot directly. 
+	// If the element exists, it will capture it without the expensive visibility calculation.
+	if err := chromedp.Run(globalCtx, chromedp.Screenshot(selector, &buf)); err != nil {
+		return nil, err
 	}
 
 	return buf, nil
